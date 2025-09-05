@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Currency Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        label {
+            display: inline-block;
+            width: 100px;
+            margin-top: 10px;
+        }
+        input, select {
+            margin-top: 10px;
+            padding: 5px;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+<h2>Mô tả</h2>
+<p>
+    Ứng dụng chuyển đổi tiền tệ cho phép tính giá trị tiền tệ giữa các đồng tiền khác nhau dựa vào một tỉ giá cho trước.
+</p>
+<p>
+    Trong bài tập này, chúng ta sẽ tạo một ứng dụng chuyển đổi tiền tệ với giao diện như sau:
+</p>
+
+<div>
+    <label for="amount">Amount</label>
+    <input type="number" id="amount" value="1" min="0">
+</div>
+
+<div>
+    <label for="fromCurrency">From Currency</label>
+    <select id="fromCurrency">
+        <option value="VND">VietNam</option>
+        <option value="USD">USD</option>
+        <option value="EUR">Euro</option>
+    </select>
+</div>
+
+<div>
+    <label for="toCurrency">To Currency</label>
+    <select id="toCurrency">
+        <option value="USD">USD</option>
+        <option value="VND">VietNam</option>
+        <option value="EUR">Euro</option>
+    </select>
+</div>
+
+<div>
+    <button onclick="convertCurrency()">Convert</button>
+</div>
+
+<div id="result">Result: </div>
+
+<h3>Các bước thao tác với ứng dụng:</h3>
+<ul>
+    <li>Lựa chọn đồng tiền gốc bằng cách chọn danh sách From Currency.</li>
+    <li>Lựa chọn đồng tiền muốn chuyển đổi sang bằng cách chọn từ danh sách To Currency.</li>
+    <li>Nhập vào giá trị muốn chuyển đổi ở trường Amount.</li>
+    <li>Nhấn nút Convert thì kết quả sẽ hiển thị ở bên dưới.</li>
+</ul>
+
+<!-- Liên kết tới file JS -->
+<script src="script.js"></script>
+</body>
+</html>
