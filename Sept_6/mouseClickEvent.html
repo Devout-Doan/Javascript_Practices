@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Move Ball</title>
+    <style>
+        #ball {
+            position: relative;
+            left: 0px;
+            transition: left 0.3s; /* Hiệu ứng di chuyển mượt mà */
+        }
+        button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hình ảnh quả bóng -->
+<img id="ball" src="ball.png" width="150" height="150">
+<p>Click a button below to move the ball left or right</p>
+
+<!-- Hai nút tách biệt -->
+<button onclick="moveRight()">Click me</button>
+
+<script>
+    let position = 0; // Vị trí hiện tại của quả bóng
+
+    function moveRight() {
+        position += 20; // Di chuyển sang phải 20px
+        document.getElementById("ball").style.left = position + "px";
+    }
+</script>
+
+</body>
+</html>
