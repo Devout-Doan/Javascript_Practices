@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhập số từ 1 đến 10</title>
+</head>
+<body>
+<h2>Chương trình nhập số từ 1 đến 10</h2>
+<script>
+    let number;
+
+    // Vòng lặp do...while
+    do {
+        number = parseInt(prompt("Hãy nhập một số từ 1 đến 10:"));
+
+        if (number < 1 || number > 10 || isNaN(number)) {
+            alert("Số bạn nhập không hợp lệ! Vui lòng nhập lại.");
+        }
+
+    } while (number < 1 || number > 10 || isNaN(number));
+
+    // Khi nhập đúng
+    alert("Bạn đã nhập đúng số: " + number);
+</script>
+</body>
+</html>

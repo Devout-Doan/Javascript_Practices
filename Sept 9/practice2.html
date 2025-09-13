@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiển thị tam giác với &lt;hr&gt;</title>
+</head>
+<body>
+<h2>Hiển thị tam giác với thẻ &lt;hr&gt;</h2>
+<div id="triangle"></div>
+
+<script>
+    const container = document.getElementById('triangle');
+
+    // Tạo các dòng hr với độ rộng từ 1 đến 100
+    for (let i = 1; i <= 15; i++) {
+        const hr = document.createElement('hr');
+        hr.style.width = i + '%';       // Độ rộng theo %
+        hr.style.margin = "10";     // Căn giữa
+        container.appendChild(hr);
+    }
+</script>
+</body>
+</html>

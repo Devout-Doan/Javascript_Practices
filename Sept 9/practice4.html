@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng cửu chương</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        td {
+            border: 1px solid black;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 18px;
+        }
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h2>Bảng cửu chương</h2>
+<table id="multiplicationTable"></table>
+
+<script>
+    const table = document.getElementById('multiplicationTable');
+
+    // Tạo bảng từ 1 đến 10
+    for (let i = 1; i <= 10; i++) {
+        const row = document.createElement('tr'); // Tạo hàng mới
+
+        for (let j = 1; j <= 10; j++) {
+            const cell = document.createElement('td'); // Tạo ô trong hàng
+            cell.textContent = i * j; // Giá trị = i nhân j
+            row.appendChild(cell); // Thêm ô vào hàng
+        }
+
+        table.appendChild(row); // Thêm hàng vào bảng
+    }
+</script>
+</body>
+</html>
