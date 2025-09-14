@@ -1,7 +1,7 @@
 let nameStudents = ["John", "Doe", "Tom", "Jack", "Kim", "Mary"];
 let length = nameStudents.length;
-document.write(nameStudents[0] + "<br>");
-document.write(nameStudents[length-1]);
+// document.write(nameStudents[0] + "<br>");
+// document.write(nameStudents[length-1]);
 
 
 
@@ -78,7 +78,51 @@ function findMaxNumber() {
     console.log(max);
 }
 
+let values = [];
+let rows = 6;
+let cols = 6;
 
+function createBoard(){
+    values = Array.from({length:rows}, () => Array(cols).fill(0));
+    renderBoard();
+}
+
+function renderBoard() {
+    const board = document.getElementById("board");
+    let html = "<table>";
+    for (let i = 0; i < rows; i++) {
+        html += "<tr>";
+        for (let j = 0; j < cols; j++) {
+            if (i === 0 && j ===0){
+
+                html += "<td>"+ "x" + "</td>"
+            }else if(i === 0){
+                html += "<td>"+ j + "</td>"
+            }else if(j == 0){
+                html += "<td>"+ i + "</td>"
+            }else{
+            html += "<td>"+ values[i][j] + "</td>";
+            }
+
+        }
+        html += "</tr>";
+    }
+    html += "</table>";
+
+    board.innerHTML = html;
+}
+function changeValue(){
+    row = +prompt("Enter the row (1-3):");
+    col = +prompt("Enter the col (1-3):");
+    value = +prompt("Enter the value:");
+
+    if(row > rows || row < 0 || col > cols || col < 0){
+        alert("There is a problem, please enter numbers again!");
+        return;
+    }
+    values[row][col] = value;
+    renderBoard();
+}
 
 
 
