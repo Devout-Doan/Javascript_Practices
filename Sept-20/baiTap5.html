@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Sản Phẩm</title>
+    <style>
+        table, td, th {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<h1>Quản Lý Sản Phẩm</h1>
+<div class="container">
+    <input type="text" id="productInput" placeholder="Nhập tên sản phẩm">
+    <button onclick="addProduct()">Thêm</button>
+
+    <table id="productTable">
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên sản phẩm</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody id="productTableBody">
+        <!-- Danh sách sản phẩm sẽ hiển thị ở đây -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Danh sách sản phẩm ban đầu
+    let products = ["iPhone 15", "Samsung Galaxy S24", "MacBook Pro"];
+
+    // Hiển thị danh sách sản phẩm dưới dạng bảng
+    function renderProducts() {
+        const tableBody = document.getElementById("productTableBody");
+        tableBody.innerHTML = "";
+
+        products.forEach((product, index) => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${product}</td>
+          <td>
+            <button class="edit-btn" onclick="editProduct(${index})">Sửa</button>
+            <button class="delete-btn" onclick="deleteProduct(${index})">Xóa</button>
+          </td>
+        `;
+
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Thêm sản phẩm mới
+    function addProduct() {
+        const input = document.getElementById("productInput");
+        const newProduct = input.value.trim();
+
+        if (newProduct === "") {
+            alert("Vui lòng nhập tên sản phẩm!");
+            return;
+        }
+
+        products.push(newProduct);
+        input.value = "";
+        renderProducts();
+    }
+
+    // Sửa sản phẩm
+    function editProduct(index) {
+        const currentName = products[index];
+        const newName = prompt("Nhập tên sản phẩm mới:", currentName);
+
+        if (newName !== null && newName.trim() !== "") {
+            products[index] = newName.trim();
+            renderProducts();
+        }
+    }
+
+    // Xóa sản phẩm
+    function deleteProduct(index) {
+        if (confirm("Bạn có chắc muốn xóa sản phẩm này?")) {
+            products.splice(index, 1);
+            renderProducts();
+        }
+    }
+
+    // Hiển thị bảng sản phẩm ban đầu
+    renderProducts();
+</script>
+</body>
+</html>

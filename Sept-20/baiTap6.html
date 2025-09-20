@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiểm tra từ đối xứng - Đệ quy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>Kiểm Tra Chuỗi Đối Xứng (Palindrome)</h1>
+<div class="container">
+    <input type="text" id="inputString" placeholder="Nhập chuỗi cần kiểm tra">
+    <button onclick="checkPalindrome()">Kiểm tra</button>
+    <div class="result" id="result">Kết quả sẽ hiển thị ở đây</div>
+</div>
+
+<script>
+    // Hàm đệ quy kiểm tra chuỗi đối xứng
+    function isPalindrome(s) {
+        // Chuẩn hóa chuỗi: bỏ khoảng trắng, đổi về chữ thường
+        s = s.toLowerCase().replace(/\s+/g, '');
+
+        // Nếu độ dài <= 1 thì chắc chắn là đối xứng
+        if (s.length <= 1) return true;
+
+        // Nếu ký tự đầu và cuối khác nhau → không phải đối xứng
+        if (s[0] !== s[s.length - 1]) return false;
+
+        // Đệ quy kiểm tra phần giữa chuỗi
+        return isPalindrome(s.slice(1, -1));
+    }
+
+    // Hàm chạy khi người dùng nhấn nút
+    function checkPalindrome() {
+        const input = document.getElementById('inputString').value.trim();
+        const resultDiv = document.getElementById('result');
+
+        if (input === "") {
+            alert("Vui lòng nhập một chuỗi!");
+            return;
+        }
+
+        if (isPalindrome(input)) {
+            resultDiv.style.color = "green";
+            resultDiv.innerText = `"${input}" là từ đối xứng (palindrome).`;
+        } else {
+            resultDiv.style.color = "red";
+            resultDiv.innerText = `"${input}" không phải là từ đối xứng.`;
+        }
+    }
+</script>
+</body>
+</html>

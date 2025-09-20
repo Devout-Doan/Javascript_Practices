@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập JavaScript - Hàm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .btn {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+        .section-title {
+            margin-top: 25px;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+<h1>Bài tập Hàm JavaScript</h1>
+
+<h3 class="section-title">Bài tập 1: Tính Bình Phương</h3>
+<button class="btn" onclick="bai1()">Kiểm tra</button>
+
+<h3 class="section-title">Bài tập 2: Tính diện tích & chu vi hình tròn</h3>
+<button class="btn" onclick="bai2()">Kiểm tra</button>
+
+<h3 class="section-title">Bài tập 3: Tính Giai Thừa</h3>
+<button class="btn" onclick="bai3()">Kiểm tra</button>
+
+<h3 class="section-title">Bài tập 4: Kiểm tra ký tự số</h3>
+<button class="btn" onclick="bai4()">Kiểm tra</button>
+
+<h3 class="section-title">Bài tập 5: Tìm số nguyên nhỏ nhất</h3>
+<button class="btn" onclick="bai5()">Kiểm tra</button>
+
+<h3 class="section-title">Bài tập 6: Kiểm tra số nguyên dương</h3>
+<button class="btn" onclick="bai6()">Kiểm tra</button>
+
+<h3 class="section-title">Bài tập 7: Đổi chỗ hai số nguyên</h3>
+<button class="btn" onclick="bai7()">Kiểm tra</button>
+
+<h3 class="section-title">Bài tập 8: Đảo ngược mảng</h3>
+<button class="btn" onclick="bai8()">Kiểm tra</button>
+
+<h3 class="section-title">Bài tập 9: Kiểm tra ký tự trong mảng</h3>
+<button class="btn" onclick="bai9()">Kiểm tra</button>
+
+<div class="output" id="output">Kết quả sẽ hiển thị tại đây...</div>
+
+<script>
+    const output = document.getElementById("output");
+
+    // ==============================
+    // BÀI 1: Tính bình phương
+    // ==============================
+    function square(num) {
+        return num * num;
+    }
+
+    function bai1() {
+        let n = prompt("Nhập một số để tính bình phương:");
+        n = parseFloat(n);
+        if (isNaN(n)) {
+            alert("Vui lòng nhập số hợp lệ!");
+            return;
+        }
+        output.innerText = `Bình phương của ${n} là: ${square(n)}`;
+    }
+
+    // ==============================
+    // BÀI 2: Diện tích & Chu vi hình tròn
+    // ==============================
+    function circleArea(r) {
+        return Math.PI * r * r;
+    }
+
+    function circlePerimeter(r) {
+        return 2 * Math.PI * r;
+    }
+
+    function bai2() {
+        let r = prompt("Nhập bán kính hình tròn:");
+        r = parseFloat(r);
+        if (isNaN(r) || r <= 0) {
+            alert("Vui lòng nhập bán kính hợp lệ!");
+            return;
+        }
+        let area = circleArea(r).toFixed(2);
+        let perimeter = circlePerimeter(r).toFixed(2);
+        output.innerText = `Bán kính: ${r}
+Diện tích: ${area}
+Chu vi: ${perimeter}`;
+    }
+
+    // ==============================
+    // BÀI 3: Tính giai thừa
+    // ==============================
+    function factorial(n) {
+        if (n < 0) return null;
+        let result = 1;
+        for (let i = 1; i <= n; i++) {
+            result *= i;
+        }
+        return result;
+    }
+
+    function bai3() {
+        let n = prompt("Nhập số nguyên để tính giai thừa:");
+        n = parseInt(n);
+        if (isNaN(n) || n < 0) {
+            alert("Vui lòng nhập số nguyên không âm!");
+            return;
+        }
+        output.innerText = `Giai thừa của ${n} là: ${factorial(n)}`;
+    }
+
+    // ==============================
+    // BÀI 4: Kiểm tra ký tự số
+    // ==============================
+    function isDigit(char) {
+        return !isNaN(char) && char.trim() !== "";
+    }
+
+    function bai4() {
+        let char = prompt("Nhập một ký tự:");
+        if (isDigit(char)) {
+            output.innerText = `"${char}" là ký tự số → true`;
+        } else {
+            output.innerText = `"${char}" không phải là ký tự số → false`;
+        }
+    }
+
+    // ==============================
+    // BÀI 5: Tìm số nguyên nhỏ nhất
+    // ==============================
+    function minOfThree(a, b, c) {
+        return Math.min(a, b, c);
+    }
+
+    function bai5() {
+        let a = parseFloat(prompt("Nhập số thứ nhất:"));
+        let b = parseFloat(prompt("Nhập số thứ hai:"));
+        let c = parseFloat(prompt("Nhập số thứ ba:"));
+
+        if ([a, b, c].some(isNaN)) {
+            alert("Vui lòng nhập số hợp lệ!");
+            return;
+        }
+
+        output.innerText = `Số nhỏ nhất trong ba số là: ${minOfThree(a, b, c)}`;
+    }
+
+    // ==============================
+    // BÀI 6: Kiểm tra số nguyên dương
+    // ==============================
+    function isPositiveInteger(n) {
+        return Number.isInteger(n) && n > 0;
+    }
+
+    function bai6() {
+        let n = parseFloat(prompt("Nhập một số:"));
+        if (isPositiveInteger(n)) {
+            output.innerText = `${n} là số nguyên dương → true`;
+        } else {
+            output.innerText = `${n} không phải là số nguyên dương → false`;
+        }
+    }
+
+    // ==============================
+    // BÀI 7: Đổi chỗ hai số nguyên
+    // ==============================
+    function swapNumbers(a, b) {
+        return [b, a];
+    }
+
+    function bai7() {
+        let a = parseFloat(prompt("Nhập số thứ nhất:"));
+        let b = parseFloat(prompt("Nhập số thứ hai:"));
+
+        if (isNaN(a) || isNaN(b)) {
+            alert("Vui lòng nhập số hợp lệ!");
+            return;
+        }
+
+        let swapped = swapNumbers(a, b);
+        output.innerText = `Sau khi đổi chỗ:
+Số thứ nhất = ${swapped[0]}, Số thứ hai = ${swapped[1]}`;
+    }
+
+    // ==============================
+    // BÀI 8: Đảo ngược mảng
+    // ==============================
+    function reverseArray(arr) {
+        return arr.reverse();
+    }
+
+    function bai8() {
+        let input = prompt("Nhập các số, cách nhau bằng dấu phẩy (VD: 1,2,3,4):");
+        if (!input) {
+            alert("Vui lòng nhập dữ liệu!");
+            return;
+        }
+        let arr = input.split(",").map(Number);
+        if (arr.some(isNaN)) {
+            alert("Dữ liệu không hợp lệ, vui lòng nhập số!");
+            return;
+        }
+        output.innerText = `Mảng đảo ngược: [${reverseArray(arr).join(", ")}]`;
+    }
+
+    // ==============================
+    // BÀI 9: Kiểm tra ký tự trong mảng
+    // ==============================
+    function countCharInArray(arr, char) {
+        let count = arr.filter(c => c === char).length;
+        return count > 0 ? count : -1;
+    }
+
+    function bai9() {
+        let arrayInput = prompt("Nhập các ký tự, cách nhau bằng dấu phẩy (VD: a,b,c,d):");
+        if (!arrayInput) {
+            alert("Vui lòng nhập dữ liệu!");
+            return;
+        }
+        let arr = arrayInput.split(",").map(c => c.trim());
+
+        let charToFind = prompt("Nhập ký tự cần kiểm tra:");
+        if (!charToFind) {
+            alert("Vui lòng nhập ký tự!");
+            return;
+        }
+
+        let result = countCharInArray(arr, charToFind);
+        if (result === -1) {
+            output.innerText = `Ký tự "${charToFind}" không xuất hiện trong mảng.`;
+        } else {
+            output.innerText = `Ký tự "${charToFind}" xuất hiện ${result} lần trong mảng.`;
+        }
+    }
+</script>
+</body>
+</html>

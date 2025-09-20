@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập JavaScript</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 40px;
+        }
+    </style>
+</head>
+<body>
+<h1>Bài Tập JavaScript</h1>
+
+<!-- Buttons to test each exercise -->
+<button onclick="alertMessage()">Bài 1: Alert 'Xin chào'</button>
+<button onclick="bai2()">Bài 2: Tăng số lên 1</button>
+<button onclick="bai3()">Bài 3: So sánh và tính tổng</button>
+<button onclick="bai4()">Bài 4: Alert trước và sau khi gọi hàm</button>
+<button onclick="bai5()">Bài 5: Tìm chòm sao</button>
+
+<div class="output" id="output"></div>
+
+<script>
+    // ============================
+    // BÀI 1
+    // ============================
+    function alertMessage() {
+        alert("Xin chào");
+    }
+
+    // ============================
+    // BÀI 2
+    // ============================
+    function increaseByOne(num) {
+        return num + 1;
+    }
+
+    function bai2() {
+        let input = prompt("Nhập vào một số:");
+        let number = parseFloat(input);
+
+        if (!isNaN(number)) {
+            let result = increaseByOne(number);
+            document.getElementById("output").innerText = "Giá trị sau khi tăng lên 1 là: " + result;
+        } else {
+            alert("Vui lòng nhập một số hợp lệ!");
+        }
+    }
+
+    // ============================
+    // BÀI 3
+    // ============================
+    function compareAndSum(a, b) {
+        if (a > b) {
+            alert("Số thứ nhất lớn hơn số thứ hai!");
+        } else {
+            return a + b;
+        }
+    }
+
+    function bai3() {
+        let num1 = parseFloat(prompt("Nhập số thứ nhất:"));
+        let num2 = parseFloat(prompt("Nhập số thứ hai:"));
+
+        if (isNaN(num1) || isNaN(num2)) {
+            alert("Vui lòng nhập hai số hợp lệ!");
+            return;
+        }
+
+        let result = compareAndSum(num1, num2);
+        if (result !== undefined) {
+            document.getElementById("output").innerText = "Tổng của hai số là: " + result;
+        } else {
+            document.getElementById("output").innerText = "Không có kết quả để hiển thị.";
+        }
+    }
+
+    // ============================
+    // BÀI 4
+    // ============================
+    function addNumbers() {
+        let firstNum = 4;
+        let secondNum = 8;
+        let result = firstNum + secondNum;
+        return result;
+    }
+
+    function bai4() {
+        let result = 0;
+        alert("Giá trị của biến result trước khi gọi hàm: " + result);
+        result = addNumbers();
+        alert("Giá trị của biến result sau khi gọi hàm: " + result);
+        document.getElementById("output").innerText =
+            "Kết quả từ hàm addNumbers là: " + result;
+    }
+
+    // ============================
+    // BÀI 5
+    // ============================
+    const stars = ["Polaris", "Aldebaran", "Deneb", "Vega", "Altair", "Dubhe", "Regulus"];
+    const constellations = ["Ursa Minor", "Taurus", "Cygnus", "Lyra", "Aquila", "Ursa Major", "Leo"];
+
+    function findConstellation(starName) {
+        for (let i = 0; i < stars.length; i++) {
+            if (stars[i].toLowerCase() === starName.toLowerCase()) {
+                return constellations[i];
+            }
+        }
+        return null;
+    }
+
+    function bai5() {
+        let starInput = prompt("Nhập tên ngôi sao (ví dụ: Polaris, Vega, Altair...):");
+        if (!starInput) {
+            alert("Bạn chưa nhập tên ngôi sao.");
+            return;
+        }
+
+        let constellation = findConstellation(starInput);
+
+        if (constellation) {
+            document.getElementById("output").innerText =
+                `Ngôi sao "${starInput}" thuộc chòm sao "${constellation}".`;
+        } else {
+            document.getElementById("output").innerText =
+                `Không tìm thấy ngôi sao "${starInput}" trong danh sách.`;
+        }
+    }
+</script>
+</body>
+</html>
