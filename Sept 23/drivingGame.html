@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Car Driving Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #222;
+            color: #fff;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 10px;
+        }
+
+        #gameContainer {
+            position: relative;
+            margin: 20px auto;
+            border: 2px solid #fff;
+            width: 600px;
+            height: 400px;
+            background: #444;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            background: #333;
+        }
+
+        #scoreBoard {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+        #gameOver {
+            position: absolute;
+            width: 100%;
+            top: 40%;
+            text-align: center;
+            font-size: 30px;
+            color: red;
+            display: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h2>🚗 Game Lái Xe - OOP</h2>
+<div id="gameContainer">
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
+    <div id="gameOver">GAME OVER</div>
+</div>
+<div id="scoreBoard">Điểm: <span id="score">0</span></div>
+
+<script>
+    // ===== CLASS: Car =====
+    class Car {
+        constructor(x, y, size, color = "lime") {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.color = color;
+            this.dx = 2; // initial speed in x-direction
+            this.dy = 0;
+            this.defaultSpeed = 2;
+            this.boostSpeed = 5;
+            this.currentSpeed = this.defaultSpeed;
+        }
+
+        draw(ctx) {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.size, this.size);
+        }
+
+        update() {
+            this.x += this.dx;
+            this.y += this.dy;
+        }
+
+        changeDirection(direction) {
+            switch (direction) {
+                case "up":
+                    this.dx = 0;
+                    this.dy = -this.currentSpeed;
+                    break;
+                case "down":
+                    this.dx = 0;
+                    this.dy = this.currentSpeed;
+                    break;
+                case "left":
+                    this.dx = -this.currentSpeed;
+                    this.dy = 0;
+                    break;
+                case "right":
+                    this.dx = this.currentSpeed;
+                    this.dy = 0;
+                    break;
+            }
+        }
+
+        boost(isBoosting) {
+            this.currentSpeed = isBoosting ? this.boostSpeed : this.defaultSpeed;
+            if (this.dx !== 0) {
+                this.dx = this.dx > 0 ? this.currentSpeed : -this.currentSpeed;
+            } else if (this.dy !== 0) {
+                this.dy = this.dy > 0 ? this.currentSpeed : -this.currentSpeed;
+            }
+        }
+
+        checkBoundary(canvasWidth, canvasHeight) {
+            if (this.x < 0) this.x = 0;
+            if (this.x + this.size > canvasWidth) this.x = canvasWidth - this.size;
+            if (this.y < 0) this.y = 0;
+            if (this.y + this.size > canvasHeight) this.y = canvasHeight - this.size;
+        }
+    }
+
+    // ===== CLASS: Obstacle =====
+    class Obstacle {
+        constructor(x, y, size, color = "red") {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.color = color;
+        }
+
+        draw(ctx) {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.size, this.size);
+        }
+    }
+
+    // ===== CLASS: Reward =====
+    class Reward {
+        constructor(x, y, size, color = "yellow") {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.color = color;
+        }
+
+        draw(ctx) {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x + this.size / 2, this.y + this.size / 2, this.size / 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    // ===== CLASS: Game =====
+    class Game {
+        constructor(canvasId) {
+            this.canvas = document.getElementById(canvasId);
+            this.ctx = this.canvas.getContext("2d");
+            this.score = 0;
+            this.isGameOver = false;
+            this.gameOverText = document.getElementById("gameOver");
+            this.scoreDisplay = document.getElementById("score");
+
+            // Initialize car
+            this.car = new Car(this.canvas.width / 2 - 15, this.canvas.height / 2 - 15, 30);
+
+            // Lists for obstacles and rewards
+            this.obstacles = [];
+            this.rewards = [];
+
+            // Generate obstacles and rewards
+            this.generateObstacles(6);
+            this.generateRewards(5);
+
+            this.bindControls();
+        }
+
+        generateObstacles(count) {
+            for (let i = 0; i < count; i++) {
+                this.obstacles.push(
+                    new Obstacle(
+                        Math.random() * (this.canvas.width - 30),
+                        Math.random() * (this.canvas.height - 30),
+                        30
+                    )
+                );
+            }
+        }
+
+        generateRewards(count) {
+            for (let i = 0; i < count; i++) {
+                this.rewards.push(
+                    new Reward(
+                        Math.random() * (this.canvas.width - 20),
+                        Math.random() * (this.canvas.height - 20),
+                        20
+                    )
+                );
+            }
+        }
+
+        bindControls() {
+            document.addEventListener("keydown", (e) => {
+                if (this.isGameOver) return;
+                switch (e.key) {
+                    case "ArrowUp":
+                        this.car.changeDirection("up");
+                        break;
+                    case "ArrowDown":
+                        this.car.changeDirection("down");
+                        break;
+                    case "ArrowLeft":
+                        this.car.changeDirection("left");
+                        break;
+                    case "ArrowRight":
+                        this.car.changeDirection("right");
+                        break;
+                    case "Control":
+                        this.car.boost(true);
+                        break;
+                }
+            });
+
+            document.addEventListener("keyup", (e) => {
+                if (e.key === "Control") {
+                    this.car.boost(false);
+                }
+            });
+        }
+
+        // Collision check
+        checkCollision(a, ax, ay, b, bx, by) {
+            return ax < bx + b && ax + a > bx && ay < by + b && ay + a > by;
+        }
+
+        checkGameLogic() {
+            // Check obstacle collision -> Game Over
+            for (let obstacle of this.obstacles) {
+                if (this.checkCollision(this.car.size, this.car.x, this.car.y, obstacle.size, obstacle.x, obstacle.y)) {
+                    this.endGame();
+                }
+            }
+
+            // Check reward collision -> Increase score
+            this.rewards = this.rewards.filter((reward) => {
+                if (this.checkCollision(this.car.size, this.car.x, this.car.y, reward.size, reward.x, reward.y)) {
+                    this.score += 10;
+                    this.scoreDisplay.innerText = this.score;
+                    return false; // Remove this reward
+                }
+                return true;
+            });
+        }
+
+        endGame() {
+            this.isGameOver = true;
+            this.gameOverText.style.display = "block";
+        }
+
+        update() {
+            this.car.update();
+            this.car.checkBoundary(this.canvas.width, this.canvas.height);
+            this.checkGameLogic();
+        }
+
+        draw() {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            // Draw car
+            this.car.draw(this.ctx);
+
+            // Draw obstacles
+            this.obstacles.forEach((obstacle) => obstacle.draw(this.ctx));
+
+            // Draw rewards
+            this.rewards.forEach((reward) => reward.draw(this.ctx));
+        }
+
+        loop() {
+            if (!this.isGameOver) {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.loop());
+            }
+        }
+
+        start() {
+            this.loop();
+        }
+    }
+
+    // ===== Start the Game =====
+    const game = new Game("gameCanvas");
+    game.start();
+</script>
+</body>
+</html>

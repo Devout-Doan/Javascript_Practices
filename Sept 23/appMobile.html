@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Messaging Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+            background: #f9f9f9;
+        }
+        h2 {
+            color: #333;
+        }
+        .phone {
+            border: 1px solid #ccc;
+            background: #fff;
+            display: inline-block;
+            padding: 20px;
+            margin: 20px;
+            width: 250px;
+            vertical-align: top;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .phone h3 {
+            margin-top: 0;
+        }
+        textarea {
+            width: 90%;
+            height: 60px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 8px 15px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .inbox, .sent {
+            text-align: left;
+            margin-top: 10px;
+            max-height: 100px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 5px;
+            background: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+<h2>📱 Mô phỏng gửi tin nhắn giữa hai điện thoại</h2>
+
+<!-- Nokia -->
+<div class="phone" id="nokia">
+    <h3>Nokia</h3>
+    <p>Pin: <span id="nokiaBattery">100</span>%</p>
+    <button onclick="nokia.togglePower()">Bật/Tắt</button>
+    <button onclick="nokia.chargeBattery()">Sạc pin</button>
+    <br>
+    <textarea id="nokiaMessage" placeholder="Soạn tin nhắn..."></textarea>
+    <br>
+    <button onclick="sendMessage(nokia, iphone)">Gửi cho iPhone</button>
+    <div>
+        <h4>Hộp thư đến</h4>
+        <div class="inbox" id="nokiaInbox"></div>
+    </div>
+    <div>
+        <h4>Đã gửi</h4>
+        <div class="sent" id="nokiaSent"></div>
+    </div>
+</div>
+
+<!-- iPhone -->
+<div class="phone" id="iphone">
+    <h3>iPhone</h3>
+    <p>Pin: <span id="iphoneBattery">100</span>%</p>
+    <button onclick="iphone.togglePower()">Bật/Tắt</button>
+    <button onclick="iphone.chargeBattery()">Sạc pin</button>
+    <br>
+    <textarea id="iphoneMessage" placeholder="Soạn tin nhắn..."></textarea>
+    <br>
+    <button onclick="sendMessage(iphone, nokia)">Gửi cho Nokia</button>
+    <div>
+        <h4>Hộp thư đến</h4>
+        <div class="inbox" id="iphoneInbox"></div>
+    </div>
+    <div>
+        <h4>Đã gửi</h4>
+        <div class="sent" id="iphoneSent"></div>
+    </div>
+</div>
+
+<script>
+    // Định nghĩa lớp Mobile
+    class Mobile {
+        constructor(name) {
+            this.name = name;
+            this.battery = 100;
+            this.isOn = false;
+            this.draftingMessage = "";
+            this.inbox = [];
+            this.sent = [];
+        }
+
+        // Bật/Tắt điện thoại
+        togglePower() {
+            this.isOn = !this.isOn;
+            alert(`${this.name} đã ${this.isOn ? "bật" : "tắt"} nguồn.`);
+            this.updateBatteryDisplay();
+        }
+
+        // Sạc pin
+        chargeBattery() {
+            if (this.battery < 100) {
+                this.battery = Math.min(this.battery + 10, 100);
+                alert(`${this.name} đã sạc pin, pin hiện tại: ${this.battery}%`);
+            } else {
+                alert(`${this.name} đã đầy pin.`);
+            }
+            this.updateBatteryDisplay();
+        }
+
+        // Soạn tin nhắn
+        composeMessage(message) {
+            if (!this.isOn) {
+                alert(`${this.name} đang tắt, không thể soạn tin nhắn.`);
+                return;
+            }
+            this.draftingMessage = message;
+            this.consumeBattery();
+        }
+
+        // Gửi tin nhắn
+        sendMessage(receiver) {
+            if (!this.isOn) {
+                alert(`${this.name} đang tắt, không thể gửi tin nhắn.`);
+                return;
+            }
+            if (this.draftingMessage.trim() === "") {
+                alert("Tin nhắn rỗng, không thể gửi.");
+                return;
+            }
+
+            receiver.receiveMessage(this.draftingMessage, this.name);
+            this.sent.push(this.draftingMessage);
+            this.draftingMessage = "";
+            this.consumeBattery();
+            this.updateSentDisplay();
+        }
+
+        // Nhận tin nhắn
+        receiveMessage(message, senderName) {
+            if (!this.isOn) return; // Nếu tắt, không nhận được tin
+            this.inbox.push(`${senderName}: ${message}`);
+            this.consumeBattery();
+            this.updateInboxDisplay();
+        }
+
+        // Xem hộp thư đến
+        updateInboxDisplay() {
+            const inboxElement = document.getElementById(`${this.name.toLowerCase()}Inbox`);
+            inboxElement.innerHTML = this.inbox.map(msg => `<p>${msg}</p>`).join('');
+        }
+
+        // Xem tin nhắn đã gửi
+        updateSentDisplay() {
+            const sentElement = document.getElementById(`${this.name.toLowerCase()}Sent`);
+            sentElement.innerHTML = this.sent.map(msg => `<p>${msg}</p>`).join('');
+        }
+
+        // Giảm pin sau mỗi thao tác
+        consumeBattery() {
+            if (this.battery > 0) {
+                this.battery--;
+            } else {
+                this.isOn = false;
+                alert(`${this.name} đã hết pin và tắt nguồn.`);
+            }
+            this.updateBatteryDisplay();
+        }
+
+        // Cập nhật hiển thị pin
+        updateBatteryDisplay() {
+            const batteryElement = document.getElementById(`${this.name.toLowerCase()}Battery`);
+            batteryElement.innerText = this.battery;
+        }
+    }
+
+    // ======= Tạo đối tượng Nokia và iPhone =======
+    const nokia = new Mobile("Nokia");
+    const iphone = new Mobile("iPhone");
+
+    // Hàm gửi tin nhắn giữa hai điện thoại
+    function sendMessage(sender, receiver) {
+        const messageInput = document.getElementById(`${sender.name.toLowerCase()}Message`);
+        sender.composeMessage(messageInput.value);
+        sender.sendMessage(receiver);
+        messageInput.value = ""; // Xóa nội dung ô soạn
+    }
+</script>
+</body>
+</html>
