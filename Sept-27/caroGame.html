@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Trò chơi Cờ Caro</title>
+</head>
+<body>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f7f7f7;
+    }
+
+    h1 {
+        margin: 20px 0;
+    }
+
+    /* === Player Turn Area === */
+    #turn-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 15px;
+        font-size: 20px;
+    }
+
+    .player-label {
+        padding: 10px 20px;
+        border-radius: 8px;
+        background-color: #eaeaea;
+        color: #444;
+        min-width: 140px;
+        text-align: center;
+        transition: all 0.3s ease;
+        font-weight: normal;
+        box-shadow: none;
+    }
+
+    .vs {
+        margin: 0 15px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #666;
+    }
+
+    /* Highlight for Player X */
+    .active-x {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+        box-shadow: 0 0 15px #007bff, 0 0 30px #3399ff;
+        transform: scale(1.05);
+    }
+
+    /* Highlight for Player O */
+    .active-o {
+        background-color: #ff4d4d;
+        color: #fff;
+        font-weight: bold;
+        box-shadow: 0 0 15px #ff4d4d, 0 0 30px #ff9999;
+        transform: scale(1.05);
+    }
+
+    /* === Board Styling === */
+    #board {
+        display: grid;
+        grid-template-columns: repeat(20, 30px);
+        grid-template-rows: repeat(20, 30px);
+        margin: 20px auto;
+        width: max-content;
+        background: #ccc;
+        border: 2px solid #444;
+    }
+
+    .cell {
+        width: 30px;
+        height: 30px;
+        border: 1px solid #888;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        cursor: pointer;
+        background-color: #fff;
+        transition: background 0.2s;
+    }
+
+    .cell:hover {
+        background-color: #eaeaea;
+    }
+
+    .win {
+        background-color: yellow !important;
+    }
+
+    /* === Status and Button === */
+    #status {
+        margin: 15px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    #resetBtn {
+        padding: 10px 20px;
+        font-size: 16px;
+        background: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #resetBtn:hover {
+        background: #0056b3;
+    }
+
+</style>
+<h1>🎲 Trò chơi Cờ Caro 🎲</h1>
+
+<!-- Vùng hiển thị lượt chơi -->
+<div id="turn-container">
+    <span id="player-x" class="player-label active-x">Người chơi X</span>
+    <span class="vs">VS</span>
+    <span id="player-o" class="player-label">Người chơi O</span>
+</div>
+
+<div id="board"></div>
+
+<div id="status"></div>
+
+<button id="resetBtn">Chơi lại</button>
+<script>
+    const boardSize = 20;
+    let currentPlayer = "X";
+    let gameOver = false;
+    let board = [];
+
+    // DOM Elements
+    const boardElement = document.getElementById("board");
+    const statusElement = document.getElementById("status");
+    const resetButton = document.getElementById("resetBtn");
+    const playerXElement = document.getElementById("player-x");
+    const playerOElement = document.getElementById("player-o");
+
+    // Initialize the game
+    function initBoard() {
+        board = [];
+        boardElement.innerHTML = "";
+        gameOver = false;
+        currentPlayer = "X";
+        updateTurnDisplay();
+        statusElement.textContent = "";
+
+        for (let row = 0; row < boardSize; row++) {
+            board[row] = [];
+            for (let col = 0; col < boardSize; col++) {
+                board[row][col] = "";
+
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                cell.dataset.row = row;
+                cell.dataset.col = col;
+                cell.addEventListener("click", handleCellClick);
+                boardElement.appendChild(cell);
+            }
+        }
+    }
+
+    // Reset button
+    resetButton.addEventListener("click", initBoard);
+
+    // Handle cell click
+    function handleCellClick(event) {
+        if (gameOver) return;
+
+        const row = parseInt(event.target.dataset.row);
+        const col = parseInt(event.target.dataset.col);
+
+        if (board[row][col] === "") {
+            board[row][col] = currentPlayer;
+            event.target.textContent = currentPlayer;
+
+            // Check win condition
+            if (checkWin(row, col)) {
+                statusElement.textContent = `🎉 Người chơi ${currentPlayer} thắng! 🎉`;
+                gameOver = true;
+                return;
+            }
+
+            // Switch turn
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            updateTurnDisplay();
+        }
+    }
+
+    // Update turn display with highlight
+    function updateTurnDisplay() {
+        if (currentPlayer === "X") {
+            playerXElement.classList.add("active-x");
+            playerOElement.classList.remove("active-o");
+        } else {
+            playerOElement.classList.add("active-o");
+            playerXElement.classList.remove("active-x");
+        }
+    }
+
+    // Check win conditions
+    function checkWin(row, col) {
+        return (
+            checkDirection(row, col, 1, 0) ||  // Horizontal
+            checkDirection(row, col, 0, 1) ||  // Vertical
+            checkDirection(row, col, 1, 1) ||  // Diagonal down-right
+            checkDirection(row, col, 1, -1)    // Diagonal up-right
+        );
+    }
+
+    function checkDirection(row, col, rowDir, colDir) {
+        let count = 1;
+        const positions = [[row, col]];
+
+        // One direction
+        let r = row + rowDir;
+        let c = col + colDir;
+        while (isValid(r, c) && board[r][c] === currentPlayer) {
+            count++;
+            positions.push([r, c]);
+            r += rowDir;
+            c += colDir;
+        }
+
+        // Opposite direction
+        r = row - rowDir;
+        c = col - colDir;
+        while (isValid(r, c) && board[r][c] === currentPlayer) {
+            count++;
+            positions.push([r, c]);
+            r -= rowDir;
+            c -= colDir;
+        }
+
+        if (count >= 5) {
+            highlightWin(positions);
+            return true;
+        }
+        return false;
+    }
+
+    function isValid(row, col) {
+        return row >= 0 && row < boardSize && col >= 0 && col < boardSize;
+    }
+
+    // Highlight winning cells
+    function highlightWin(positions) {
+        positions.forEach(([r, c]) => {
+            const cell = document.querySelector(
+                `.cell[data-row='${r}'][data-col='${c}']`
+            );
+            if (cell) {
+                cell.classList.add("win");
+            }
+        });
+    }
+
+    // Start game
+    initBoard();
+</script>
+</body>
+</html>
+
+

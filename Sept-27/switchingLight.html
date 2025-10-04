@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Switch and Electric Lamp Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f8f8;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #log {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            width: 400px;
+            margin: 20px auto;
+            min-height: 150px;
+            text-align: left;
+        }
+
+        .lamp-on {
+            color: green;
+            font-weight: bold;
+        }
+
+        .lamp-off {
+            color: red;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button.on {
+            background-color: green;
+            color: white;
+        }
+
+        button.off {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<h2>💡 Switch and Electric Lamp Simulation</h2>
+<div id="log"></div>
+
+<button class="on" onclick="switchButton.switchOn()">Turn ON</button>
+<button class="off" onclick="switchButton.switchOff()">Turn OFF</button>
+
+<script>
+    // Helper to display messages on the page
+    function showMessage(message, isOn = null) {
+        const logDiv = document.getElementById('log');
+        const p = document.createElement('p');
+
+        if (isOn === true) {
+            p.classList.add('lamp-on');
+        } else if (isOn === false) {
+            p.classList.add('lamp-off');
+        }
+
+        p.textContent = message;
+        logDiv.appendChild(p);
+    }
+
+    // ===== ElectricLamp Class =====
+    class ElectricLamp {
+        constructor() {
+            this.status = false; // false = OFF, true = ON
+        }
+
+        turnOn() {
+            this.status = true;
+            showMessage("The lamp is ON 💡", true);
+        }
+
+        turnOff() {
+            this.status = false;
+            showMessage("The lamp is OFF 💤", false);
+        }
+    }
+
+    // ===== SwitchButton Class =====
+    class SwitchButton {
+        constructor() {
+            this.status = false; // Switch state
+            this.lamp = null;    // Will connect to a lamp
+        }
+
+        connectToLamp(lamp) {
+            this.lamp = lamp;
+            showMessage("Switch connected to the lamp!");
+        }
+
+        switchOn() {
+            if (this.lamp) {
+                this.status = true;
+                this.lamp.turnOn();
+            } else {
+                showMessage("No lamp connected to this switch!");
+            }
+        }
+
+        switchOff() {
+            if (this.lamp) {
+                this.status = false;
+                this.lamp.turnOff();
+            } else {
+                showMessage("No lamp connected to this switch!");
+            }
+        }
+    }
+
+    // ===== Simulation =====
+    const lamp = new ElectricLamp();
+    const switchButton = new SwitchButton();
+
+    switchButton.connectToLamp(lamp);
+
+    // Simulate turning ON and OFF 10 times automatically
+    let count = 0;
+    function autoToggle() {
+        if (count < 10) {
+            if (count % 2 === 0) {
+                switchButton.switchOn();
+            } else {
+                switchButton.switchOff();
+            }
+            count++;
+            setTimeout(autoToggle, 1000); // Delay 1 second between actions
+        } else {
+            showMessage("Simulation complete!");
+        }
+    }
+
+    // Start simulation automatically after a short delay
+    setTimeout(autoToggle, 1000);
+
+</script>
+</body>
+</html>

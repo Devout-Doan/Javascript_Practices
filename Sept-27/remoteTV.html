@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Mô phỏng Remote điều khiển TiVi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #output {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        #output p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<h1>📺 Remote & TiVi Simulation</h1>
+<div id="output"></div>
+
+<script>
+    // ===== Lớp TiVi =====
+    class TV {
+        constructor() {
+            this.currentChannel = 1; // kênh mặc định là 1
+            this.currentVolume = 10; // âm lượng mặc định là 10
+            this.isOn = false;       // trạng thái mặc định là tắt
+        }
+
+        // Bật TV
+        turnOn() {
+            this.isOn = true;
+            return "📺 TV đã bật.";
+        }
+
+        // Tắt TV
+        turnOff() {
+            this.isOn = false;
+            return "📺 TV đã tắt.";
+        }
+
+        // Chuyển đến một kênh bất kỳ
+        changeChannel(channel) {
+            if (!this.isOn) {
+                return "⚠️ TV đang tắt, không thể chuyển kênh.";
+            }
+            this.currentChannel = channel;
+            return `🔀 TV đã chuyển sang kênh ${channel}.`;
+        }
+
+        // Điều chỉnh âm lượng
+        adjustVolume(amount) {
+            if (!this.isOn) {
+                return "⚠️ TV đang tắt, không thể điều chỉnh âm lượng.";
+            }
+            this.currentVolume += amount;
+
+            // Giới hạn âm lượng từ 0 -> 100
+            if (this.currentVolume > 100) this.currentVolume = 100;
+            if (this.currentVolume < 0) this.currentVolume = 0;
+
+            return `🔊 Âm lượng hiện tại: ${this.currentVolume}`;
+        }
+    }
+
+    // ===== Lớp Remote =====
+    class Remote {
+        constructor(code, tv) {
+            this.code = code; // Mã điều khiển
+            this.tv = tv;     // Kết nối đến một đối tượng TV
+        }
+
+        // Remote chuyển kênh
+        changeChannel(channel) {
+            return this.tv.changeChannel(channel);
+        }
+
+        // Remote điều chỉnh âm lượng
+        adjustVolume(amount) {
+            return this.tv.adjustVolume(amount);
+        }
+
+        // Remote bật/tắt TV
+        turnOnOff() {
+            if (this.tv.isOn) {
+                return this.tv.turnOff();
+            } else {
+                return this.tv.turnOn();
+            }
+        }
+    }
+
+    // ===== Mô phỏng kịch bản =====
+    const outputDiv = document.getElementById("output");
+
+    // Hàm hiển thị kết quả
+    function log(message) {
+        console.log(message);
+        outputDiv.innerHTML += `<p>${message}</p>`;
+    }
+
+    // 1. Khởi tạo TV và Remote
+    const myTV = new TV();
+    const myRemote = new Remote("RM001", myTV);
+
+    // 2. Bật TV
+    log(myTV.turnOn());
+
+    // 3. Chuyển đến kênh 7
+    log(myTV.changeChannel(7));
+
+    // 4. Dùng Remote chuyển đến kênh 3
+    log(myRemote.changeChannel(3));
+
+    // 5. Tăng âm lượng lên 2 đơn vị
+    log(myRemote.adjustVolume(2));
+
+    // 6. Dùng Remote tắt TV
+    log(myRemote.turnOnOff());
+</script>
+</body>
+</html>

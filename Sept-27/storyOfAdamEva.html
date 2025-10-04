@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Adam and Eva - Apple Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            padding: 20px;
+        }
+        #log {
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            max-width: 500px;
+            margin: auto;
+            min-height: 200px;
+        }
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h2>🍎 Adam và Eva ăn táo 🍏</h2>
+<div id="log"></div>
+
+<script>
+    // ===== Helper function to display messages on the page =====
+    function showMessage(message) {
+        const logDiv = document.getElementById('log');
+        const p = document.createElement('p');
+        p.textContent = message;
+        logDiv.appendChild(p);
+    }
+
+    // ===== CLASS Apple =====
+    class Apple {
+        constructor() {
+            this.weight = 10; // mặc định 10 đơn vị khi tạo ra
+        }
+
+        decrease() {
+            if (this.weight > 0) {
+                this.weight--;
+            }
+        }
+
+        isEmpty() {
+            return this.weight <= 0;
+        }
+
+        getWeight() {
+            return this.weight;
+        }
+    }
+
+    // ===== CLASS Human =====
+    class Human {
+        constructor(name, gender, weight) {
+            this.name = name;
+            this.gender = gender; // true = nam, false = nữ
+            this.weight = weight;
+        }
+
+        isMale() {
+            return this.gender === true;
+        }
+
+        eat(apple) {
+            if (!apple.isEmpty()) {
+                apple.decrease();
+                this.weight++;
+                showMessage(`${this.name} vừa ăn một miếng táo. Cân nặng hiện tại: ${this.weight}`);
+            } else {
+                showMessage(`${this.name} muốn ăn táo nhưng táo đã hết!`);
+            }
+        }
+
+        checkApple(apple) {
+            showMessage(`Khối lượng quả táo còn lại: ${apple.getWeight()}`);
+            return apple.getWeight();
+        }
+
+        say(message) {
+            showMessage(`${this.name} nói: "${message}"`);
+        }
+
+        getName() {
+            return this.name;
+        }
+
+        setName(newName) {
+            this.name = newName;
+        }
+
+        getWeight() {
+            return this.weight;
+        }
+
+        setWeight(newWeight) {
+            this.weight = newWeight;
+        }
+
+        setGender(isMale) {
+            this.gender = isMale;
+        }
+    }
+
+    // ======== DEMO CHƯƠNG TRÌNH ========
+
+    // Tạo quả táo
+    let apple = new Apple();
+    showMessage("Táo được tạo ra với khối lượng ban đầu: " + apple.getWeight());
+
+    // Tạo hai nhân vật Adam và Eva
+    let adam = new Human("Adam", true, 60);
+    let eva = new Human("Eva", false, 45);
+
+    // Giới thiệu
+    adam.say("Xin chào, tôi là Adam!");
+    eva.say("Xin chào, tôi là Eva!");
+
+    // Adam kiểm tra táo
+    adam.checkApple(apple);
+
+    // Hai người lần lượt ăn táo cho đến khi hết
+    while (!apple.isEmpty()) {
+        adam.eat(apple);   // Adam ăn một miếng
+        eva.eat(apple);    // Eva ăn một miếng
+        adam.checkApple(apple);
+    }
+
+    showMessage("Táo đã hết! 🍏");
+
+    // In ra cân nặng cuối cùng
+    showMessage(`Cân nặng cuối cùng của Adam: ${adam.getWeight()}`);
+    showMessage(`Cân nặng cuối cùng của Eva: ${eva.getWeight()}`);
+
+</script>
+</body>
+</html>
